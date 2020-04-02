@@ -1,0 +1,115 @@
+﻿<Window x:Class="TgBot_FW.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TgBot_FW.View"
+        xmlns:vm="clr-namespace:TgBot_FW.ViewModel"
+        mc:Ignorable="d"
+        Title="MainView" Height="450" Width="800">
+    <d:Window.DataContext>
+        <vm:MainVM/>
+    </d:Window.DataContext>
+    <DockPanel LastChildFill="True">
+        <!--Панель меню-->
+        <Menu DockPanel.Dock="Top" Height="auto">
+            <MenuItem Header="Главное" Margin="0,2">
+                <MenuItem Header="Старт бота" Command="{Binding StartBot}"/>
+                <MenuItem Header="Стоп бот" Command="{Binding StopBot}"/>
+                <MenuItem Header="Выход" Command="{Binding Exit}"/>
+            </MenuItem>
+            <MenuItem Header="Сохранить" Margin="0,2">
+                <MenuItem Header="Сохранить сообщения" Command="{Binding SaveMessages}"/>
+                <MenuItem Header="Сохранит пользователей" Command="{Binding SaveUsers}"/>
+            </MenuItem>
+            <MenuItem Header="Настройки" Command="{Binding Opensettings}"/>
+
+
+        </Menu>
+        <!--Зона обмена сообщениями-->
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <!--Разделитель-->
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <!--Список пользователей-->
+                <WrapPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                <!--Кнопка очистки выбора списка пользователей-->
+                <Button DockPanel.Dock="Bottom" Content="Снять выделение"
+                        Height="30"
+                        Margin="0,5,0,5"
+                        Command="{Binding ClearSelectedUser}"/>
+                <!--Список пользователей-->
+                <ListBox x:Name="UsersList" HorizontalAlignment="Stretch"
+                         DockPanel.Dock="Top"
+                         SelectionMode="Single"
+                         ItemsSource="{Binding Users}"
+                         SelectedItem="{Binding SelectedUser}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Id}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            <!--Разделитель-->
+            <GridSplitter Grid.Column="1" Width="3" Background="Black"
+                          HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+            <Grid Grid.Column="2" Background="White">
+                <Grid.RowDefinitions>
+                    <!--История сообщений-->
+                    <RowDefinition Height="*"/>
+                    <!--Разделитель-->
+                    <RowDefinition Height="3"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <!--Вывод сообщений-->
+                <ListBox x:Name="messageList" Grid.Row="0"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         Margin="5"
+                         ItemsSource="{Binding Messages}"
+                         SelectedItem="{Binding SelectedMessage}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Black" Margin="5" BorderThickness="1">
+                                <StackPanel Margin="10">
+                                    <TextBlock Text="{Binding UserId}" Margin="0" FontSize="15"/>
+                                    <TextBlock Text="{Binding Text}" Margin="0" FontSize="13"/>
+                                    <TextBlock Text="{Binding Date}" Margin="0" FontSize="8" Foreground="Gray" TextAlignment="Right"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Ответить" Command="{Binding AnswerToMessage}" />
+                            <MenuItem Header="Удалить" Command="{Binding RemoveMessage}" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+                <!--Разделитель-->
+                <GridSplitter Grid.Row="1" Height="3" Background="Black"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
